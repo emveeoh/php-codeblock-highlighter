@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.0.1] - 2023-08-26
+
+### Changed
+
+- Updated the default color value.
+
 ## [1.0.0] - 2023-08-26
 
 ### Added

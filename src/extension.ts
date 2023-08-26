@@ -6,7 +6,7 @@ export function activate(context: vscode.ExtensionContext) {
   let config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
   let backgroundColor = config.get(
     "backgroundColor",
-    "rgba(255, 255, 224, 0.5)"
+    "rgba(50, 120, 200, 0.5)"
   );
 
   let phpDecorationType = vscode.window.createTextEditorDecorationType({
@@ -54,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
       config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
       backgroundColor = config.get(
         "backgroundColor",
-        "rgba(255, 255, 224, 0.5)"
+        "rgba(255, 0, 255, 0.25)"
       );
       phpDecorationType.dispose();
       phpDecorationType = vscode.window.createTextEditorDecorationType({

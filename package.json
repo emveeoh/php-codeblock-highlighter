@@ -1,8 +1,8 @@
 {
   "name": "php-codeblock-highlighter",
   "displayName": "php-codeblock-highlighter",
-  "description": "Adds a customizable background color to all PHP codeblocks in the VS Code editor",
-  "version": "1.0.0",
+  "description": "Adds a customizable background color to all PHP codeblocks in the VS Code editor to make it easier to see your embedded PHP tags.",
+  "version": "1.0.1",
   "publisher": "emveeoh",
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
       "properties": {
         "phpCodeblockHighlighter.backgroundColor": {
           "type": "string",
-          "default": "rgba(255, 255, 224, 0.5)",
+          "default": "rgba(50, 120, 200, 0.5)",
           "description": "Background color for PHP code blocks in rgba() format only."
         }
       }

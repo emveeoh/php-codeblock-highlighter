@@ -46,7 +46,7 @@ const vscode = __webpack_require__(1);
 function activate(context) {
     let activeEditor = vscode.window.activeTextEditor;
     let config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
-    let backgroundColor = config.get("backgroundColor", "rgba(255, 255, 224, 0.5)");
+    let backgroundColor = config.get("backgroundColor", "rgba(50, 120, 200, 0.5)");
     let phpDecorationType = vscode.window.createTextEditorDecorationType({
         backgroundColor: backgroundColor,
     });
@@ -82,7 +82,7 @@ function activate(context) {
     vscode.workspace.onDidChangeConfiguration((event) => {
         if (event.affectsConfiguration("phpCodeblockHighlighter.backgroundColor")) {
             config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
-            backgroundColor = config.get("backgroundColor", "rgba(255, 255, 224, 0.5)");
+            backgroundColor = config.get("backgroundColor", "rgba(255, 0, 255, 0.25)");
             phpDecorationType.dispose();
             phpDecorationType = vscode.window.createTextEditorDecorationType({
                 backgroundColor: backgroundColor,
