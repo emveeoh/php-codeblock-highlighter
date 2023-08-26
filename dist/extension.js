@@ -43,6 +43,7 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.deactivate = exports.activate = void 0;
 const vscode = __webpack_require__(1);
+let isEnabled = true; // Variable to keep track of the state (enabled/disabled)
 function activate(context) {
     let activeEditor = vscode.window.activeTextEditor;
     let config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
@@ -50,6 +51,32 @@ function activate(context) {
     let phpDecorationType = vscode.window.createTextEditorDecorationType({
         backgroundColor: backgroundColor,
     });
+    // Create status bar item
+    const toggleStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    toggleStatusBarItem.command = "togglePHPBackground";
+    updateStatusBarItem(toggleStatusBarItem); // Initialize
+    // Add to context.subscriptions to ensure they are disposed of
+    context.subscriptions.push(toggleStatusBarItem);
+    function updateStatusBarItem(item) {
+        if (isEnabled) {
+            item.text = `🎨On`;
+            item.color = undefined; // Reset to default color
+        }
+        else {
+            item.text = `🎨Off`;
+            item.color = "rgba(255, 255, 255, 0.5)"; // 50% transparency
+        }
+        item.tooltip = "Toggle PHP Background Color"; // Tooltip for more information
+        item.show();
+    }
+    // Register the command to toggle the background
+    const toggleCommand = vscode.commands.registerCommand("togglePHPBackground", () => {
+        isEnabled = !isEnabled; // Toggle the state
+        updateStatusBarItem(toggleStatusBarItem); // Update status bar item
+        updateDecorations(); // Update decorations based on the new state
+    });
+    // Add to context.subscriptions to ensure they are disposed of
+    context.subscriptions.push(toggleCommand);
     function updateDecorations() {
         if (!activeEditor) {
             return;
@@ -74,7 +101,12 @@ function activate(context) {
                 openTagPosition = null;
             }
         }
-        activeEditor.setDecorations(phpDecorationType, phpDecorations);
+        if (isEnabled) {
+            activeEditor.setDecorations(phpDecorationType, phpDecorations);
+        }
+        else {
+            activeEditor.setDecorations(phpDecorationType, []); // Clear the decorations if disabled
+        }
     }
     if (activeEditor) {
         updateDecorations();

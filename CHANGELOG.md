@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.1.0] - 2023-08-26
+
+### Added
+
+- VS Code bottom status bar button to toggle the background highlighting on/off.
+
 ## [1.0.4] - 2023-08-26
 
 ### Added
