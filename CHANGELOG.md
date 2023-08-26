@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [1.0.4] - 2023-08-26
+
+### Added
+
+- Build `php-codeblock-highlighter-1.0.3.vsix` binary. Found in `/vsix-installers` directory.
+
+## [1.0.3] - 2023-08-26
+
+### Added
+
+- MIT license
+
 ## [1.0.2] - 2023-08-26
 
 ### Updated

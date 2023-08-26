@@ -1,9 +1,9 @@
 {
-  "name": "PHP Codeblock Highlighter",
+  "name": "php-codeblock-highlighter",
   "displayName": "php-codeblock-highlighter",
   "description": "Adds a customizable background color to all PHP codeblocks in the Visual Studio Code editor to make it easier to see embedded PHP tags.",
-  "version": "1.0.2",
-  "publisher": "emveeoh | Michael van Olden",
+  "version": "1.0.4",
+  "publisher": "emveeoh",
   "repository": {
     "type": "git",
     "url": "https://github.com/emveeoh/php-codeblock-highlighter.git"
