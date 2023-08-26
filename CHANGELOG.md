@@ -1,8 +1,15 @@
 # CHANGELOG
 
+## [1.0.2] - 2023-08-26
+
+### Updated
+
+- Updated the package name.
+- Updated the package description.
+
 ## [1.0.1] - 2023-08-26
 
-### Changed
+### Updated
 
 - Updated the default color value.
 
