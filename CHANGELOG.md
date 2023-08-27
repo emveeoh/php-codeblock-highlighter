@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.2.2] - 2023-08-27
+
+### Fixed
+
+- Status bar on/off toggle now works as expected.
+
 ## [1.2.1] - 2023-08-27
 
 ### Added

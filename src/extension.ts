@@ -44,40 +44,42 @@ export function activate(context: vscode.ExtensionContext) {
       updateDecorations();
     }
   );
-
   context.subscriptions.push(toggleCommand);
 
   function updateDecorations() {
-    if (!activeEditor || !isEnabled) {
+    if (!activeEditor) {
       return;
     }
 
-    const text = activeEditor.document.getText();
     const phpDecorations: vscode.DecorationOptions[] = [];
-    let lines = text.split(/\n/);
-    let insidePhpBlock = false;
-    let openTagPosition: vscode.Position | null = null;
 
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i];
+    if (isEnabled) {
+      const text = activeEditor.document.getText();
+      let lines = text.split(/\n/);
+      let insidePhpBlock = false;
+      let openTagPosition: vscode.Position | null = null;
 
-      if (/\<\?php/i.test(line)) {
-        // Case-insensitive match for PHP opening tag
-        insidePhpBlock = true;
-        openTagPosition = new vscode.Position(i, line.search(/\<\?php/i));
-      }
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
 
-      if (insidePhpBlock) {
-        let lineEnd = new vscode.Position(i, line.length);
-        const decoration = {
-          range: new vscode.Range(openTagPosition!, lineEnd),
-          hoverMessage: "PHP block",
-        };
-        phpDecorations.push(decoration);
-      }
+        if (/\<\?php/i.test(line)) {
+          // Case-insensitive match for PHP opening tag
+          insidePhpBlock = true;
+          openTagPosition = new vscode.Position(i, line.search(/\<\?php/i));
+        }
 
-      if (line.includes("?>")) {
-        insidePhpBlock = false;
+        if (insidePhpBlock) {
+          let lineEnd = new vscode.Position(i, line.length);
+          const decoration = {
+            range: new vscode.Range(openTagPosition!, lineEnd),
+            hoverMessage: "PHP block",
+          };
+          phpDecorations.push(decoration);
+        }
+
+        if (line.includes("?>")) {
+          insidePhpBlock = false;
+        }
       }
     }
 
