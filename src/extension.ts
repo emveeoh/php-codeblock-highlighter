@@ -1,90 +1,87 @@
 import * as vscode from "vscode";
 
-let isEnabled = true; // Variable to keep track of the state (enabled/disabled)
-
 export function activate(context: vscode.ExtensionContext) {
   let activeEditor = vscode.window.activeTextEditor;
+  let isEnabled = true;
 
+  // Create and show a status bar item
+  const toggleStatusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right,
+    100
+  );
+  toggleStatusBarItem.command = "togglePHPBackground";
+  toggleStatusBarItem.tooltip = "Toggle PHP Background Color";
+  toggleStatusBarItem.text = isEnabled ? "[🎨 ON]" : "[🎨 OFF]";
+  toggleStatusBarItem.show();
+  context.subscriptions.push(toggleStatusBarItem);
+
+  // Get the configuration for the background color
   let config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
   let backgroundColor = config.get(
     "backgroundColor",
     "rgba(50, 120, 200, 0.5)"
   );
 
+  // Create a text editor decoration type for the PHP code blocks
   let phpDecorationType = vscode.window.createTextEditorDecorationType({
     backgroundColor: backgroundColor,
   });
 
-  // Create status bar item
-  const toggleStatusBarItem = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
-    100
-  );
-  toggleStatusBarItem.command = "togglePHPBackground";
-  updateStatusBarItem(toggleStatusBarItem); // Initialize
-
-  // Add to context.subscriptions to ensure they are disposed of
-  context.subscriptions.push(toggleStatusBarItem);
-
-  function updateStatusBarItem(item: vscode.StatusBarItem) {
-    if (isEnabled) {
-      item.text = `🎨On`;
-      item.color = undefined; // Reset to default color
-    } else {
-      item.text = `🎨Off`;
-      item.color = "rgba(255, 255, 255, 0.5)"; // 50% transparency
-    }
-    item.tooltip = "Toggle PHP Background Color"; // Tooltip for more information
-    item.show();
+  // Update the status bar item based on the 'isEnabled' flag
+  function updateStatusBarItem() {
+    toggleStatusBarItem.text = isEnabled ? "[🎨 ON]" : "[🎨 OFF]";
+    toggleStatusBarItem.color = isEnabled
+      ? undefined
+      : "rgba(255, 255, 255, 0.5)";
   }
 
-  // Register the command to toggle the background
+  // Toggle the isEnabled flag and update the decorations
   const toggleCommand = vscode.commands.registerCommand(
     "togglePHPBackground",
     () => {
-      isEnabled = !isEnabled; // Toggle the state
-      updateStatusBarItem(toggleStatusBarItem); // Update status bar item
-      updateDecorations(); // Update decorations based on the new state
+      isEnabled = !isEnabled;
+      updateStatusBarItem();
+      updateDecorations();
     }
   );
 
-  // Add to context.subscriptions to ensure they are disposed of
   context.subscriptions.push(toggleCommand);
 
   function updateDecorations() {
-    if (!activeEditor) {
+    if (!activeEditor || !isEnabled) {
       return;
     }
 
-    const regEx = /<\?php|\?>/g;
     const text = activeEditor.document.getText();
     const phpDecorations: vscode.DecorationOptions[] = [];
-    let match;
+    let lines = text.split(/\n/);
+    let insidePhpBlock = false;
     let openTagPosition: vscode.Position | null = null;
 
-    while ((match = regEx.exec(text))) {
-      const startPos = activeEditor.document.positionAt(match.index);
-      const endPos = activeEditor.document.positionAt(
-        match.index + match[0].length
-      );
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i];
 
-      if (match[0] === "<?php") {
-        openTagPosition = startPos;
-      } else if (match[0] === "?>" && openTagPosition) {
+      if (/\<\?php/i.test(line)) {
+        // Case-insensitive match for PHP opening tag
+        insidePhpBlock = true;
+        openTagPosition = new vscode.Position(i, line.search(/\<\?php/i));
+      }
+
+      if (insidePhpBlock) {
+        let lineEnd = new vscode.Position(i, line.length);
         const decoration = {
-          range: new vscode.Range(openTagPosition, endPos),
+          range: new vscode.Range(openTagPosition!, lineEnd),
           hoverMessage: "PHP block",
         };
         phpDecorations.push(decoration);
-        openTagPosition = null;
+      }
+
+      if (line.includes("?>")) {
+        insidePhpBlock = false;
       }
     }
 
-    if (isEnabled) {
-      activeEditor.setDecorations(phpDecorationType, phpDecorations);
-    } else {
-      activeEditor.setDecorations(phpDecorationType, []); // Clear the decorations if disabled
-    }
+    activeEditor.setDecorations(phpDecorationType, phpDecorations);
   }
 
   if (activeEditor) {
@@ -96,7 +93,7 @@ export function activate(context: vscode.ExtensionContext) {
       config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
       backgroundColor = config.get(
         "backgroundColor",
-        "rgba(255, 0, 255, 0.25)"
+        "rgba(50, 120, 200, 0.5)"
       );
       phpDecorationType.dispose();
       phpDecorationType = vscode.window.createTextEditorDecorationType({

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [1.2.0] - 2023-08-27
+
+### Added
+
+- A check for PHP opening tags written in both lowercase and uppercase.
+
+### Updated
+
+- Modified the bottom status bar toggle button design.
+
 ## [1.1.0] - 2023-08-26
 
 ### Added
