@@ -10,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
   toggleStatusBarItem.command = "togglePHPBackground";
   toggleStatusBarItem.tooltip = "Toggle PHP Background Color";
-  toggleStatusBarItem.text = isEnabled ? "[🎨 ON]" : "[🎨 OFF]";
+  toggleStatusBarItem.text = isEnabled ? "🎨 On" : "🎨 Off";
   context.subscriptions.push(toggleStatusBarItem);
   toggleStatusBarItem.show();
 

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.2.4] - 2023-08-27
+
+### Updated
+
+- Bottom bar on/off toggle text updated.
+
 ## [1.2.3] - 2023-08-27
 
 ### Fixed
