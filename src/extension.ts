@@ -4,7 +4,6 @@ export function activate(context: vscode.ExtensionContext) {
   let activeEditor = vscode.window.activeTextEditor;
   let isEnabled = true;
 
-  // Create and show a status bar item
   const toggleStatusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Right,
     100
@@ -12,30 +11,26 @@ export function activate(context: vscode.ExtensionContext) {
   toggleStatusBarItem.command = "togglePHPBackground";
   toggleStatusBarItem.tooltip = "Toggle PHP Background Color";
   toggleStatusBarItem.text = isEnabled ? "[🎨 ON]" : "[🎨 OFF]";
-  toggleStatusBarItem.show();
   context.subscriptions.push(toggleStatusBarItem);
+  toggleStatusBarItem.show();
 
-  // Get the configuration for the background color
   let config = vscode.workspace.getConfiguration("phpCodeblockHighlighter");
   let backgroundColor = config.get(
     "backgroundColor",
     "rgba(50, 120, 200, 0.5)"
   );
 
-  // Create a text editor decoration type for the PHP code blocks
   let phpDecorationType = vscode.window.createTextEditorDecorationType({
     backgroundColor: backgroundColor,
   });
 
-  // Update the status bar item based on the 'isEnabled' flag
   function updateStatusBarItem() {
-    toggleStatusBarItem.text = isEnabled ? "[🎨 ON]" : "[🎨 OFF]";
+    toggleStatusBarItem.text = isEnabled ? "🎨 On" : "🎨 Off";
     toggleStatusBarItem.color = isEnabled
       ? undefined
       : "rgba(255, 255, 255, 0.5)";
   }
 
-  // Toggle the isEnabled flag and update the decorations
   const toggleCommand = vscode.commands.registerCommand(
     "togglePHPBackground",
     () => {
@@ -44,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
       updateDecorations();
     }
   );
+
   context.subscriptions.push(toggleCommand);
 
   function updateDecorations() {
@@ -63,22 +59,21 @@ export function activate(context: vscode.ExtensionContext) {
         let line = lines[i];
 
         if (/\<\?php/i.test(line)) {
-          // Case-insensitive match for PHP opening tag
           insidePhpBlock = true;
           openTagPosition = new vscode.Position(i, line.search(/\<\?php/i));
         }
 
         if (insidePhpBlock) {
           let lineEnd = new vscode.Position(i, line.length);
+          if (line.includes("?>")) {
+            lineEnd = new vscode.Position(i, line.indexOf("?>") + 2); // +2 to include the '?>'
+            insidePhpBlock = false; // Close the PHP block
+          }
           const decoration = {
             range: new vscode.Range(openTagPosition!, lineEnd),
             hoverMessage: "PHP block",
           };
           phpDecorations.push(decoration);
-        }
-
-        if (line.includes("?>")) {
-          insidePhpBlock = false;
         }
       }
     }

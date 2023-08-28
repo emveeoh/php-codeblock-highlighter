@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [1.2.3] - 2023-08-27
+
+### Fixed
+
+- Background color was incorrectly extending past the closing "?>" PHP tag.
+
 ## [1.2.2] - 2023-08-27
 
 ### Fixed
